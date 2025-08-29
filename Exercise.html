@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>운동 기록 웹 앱</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="data:application/json;base64,eyJpY29ucyI6W3sic2l6ZXMiOiIxOTJ4MTkyIiwidHlwZSI6ImltYWdlL3BuZyIsInNyYyI6Imh0dHBzOi8vcGxhY2Vob2xkLmNvLzE5MngxOTI/dGV4dD1JMSIsInB1cnBvc2VzIjoiYW55IG1hc2thYmxlIn0seyJzaXplcyI6IjUxMng1MTIiLCJ0eXBlIjoiaW1hZ2UvcG5nIiwic3JjIjoiaHR0cHM6Ly9wbGFjZWhvbGQuY28vNTEyeDUxMj90ZXh0PUkyIiwicHVycG9zZXMiOiJhbnkgbWFza2FibGUifV0sIm5hbWUiOiLtlZjthqDtmZjsn7HthqDtmJgg7Jyk7JuQIO2VmeyXkSIsInNob3J0X25hbWUiOiLtlZjthqDtmZjsn7EiLCJzdGFydF91cmwiOiIuLyIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiNmM2Y0ZjYiLCJ0aGVtZS1jb2xvciI6IiMzYjgyZjYifQ==">
+    <meta name="theme-color" content="#3b82f6">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        .overflow-x-auto { -webkit-overflow-scrolling: touch; }
+        @media (min-width: 768px) {
+            body { overflow: hidden; }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-4 sm:p-8 flex flex-col items-center min-h-screen">
+
+    <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-xl w-full max-w-5xl">
+        <h1 class="text-2xl sm:text-4xl font-bold text-center text-gray-800 mb-2 sm:mb-4">운동 기록 웹 앱</h1>
+        <p class="text-center text-gray-500 text-sm sm:text-base mb-6 sm:mb-8">당신의 운동 기록을 남겨보세요. 기록은 브라우저에 자동으로 저장됩니다.</p>
+
+        <!-- 통계 섹션 -->
+        <div id="stats-section" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+            <!-- 통계 항목들은 JavaScript로 동적으로 채워집니다 -->
+        </div>
+
+        <!-- 입력 폼 -->
+        <form id="workout-form" class="space-y-4 mb-6 sm:mb-8">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- 날짜 입력 -->
+                <div>
+                    <label for="date" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">날짜</label>
+                    <input type="date" id="date" required class="w-full px-2 sm:px-4 py-2 text-xs sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150">
+                </div>
+                <!-- 운동 항목들 -->
+                <div>
+                    <label for="jogging-km" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">슬로우 조깅 (km)</label>
+                    <input type="number" step="0.1" id="jogging-km" class="w-full px-2 sm:px-4 py-2 text-xs sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150">
+                </div>
+                <div>
+                    <label for="jogging-time" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">슬로우 조깅 시간 (분)</label>
+                    <input type="number" id="jogging-time" class="w-full px-2 sm:px-4 py-2 text-xs sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150">
+                </div>
+                <!-- 푸시업, 스쿼트, 플랭크 그룹 -->
+                <div class="col-span-2 grid grid-cols-3 gap-4">
+                    <div>
+                        <label for="pushups" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">푸시업 (개)</label>
+                        <input type="number" id="pushups" class="w-full px-2 sm:px-4 py-2 text-xs sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150">
+                    </div>
+                    <div>
+                        <label for="squats" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">스쿼트 (개)</label>
+                        <input type="number" id="squats" class="w-full px-2 sm:px-4 py-2 text-xs sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150">
+                    </div>
+                    <div>
+                        <label for="plank" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">플랭크 (초)</label>
+                        <input type="number" id="plank" class="w-full px-2 sm:px-4 py-2 text-xs sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150">
+                    </div>
+                </div>
+                <!-- 메모 입력 -->
+                <div class="col-span-2 lg:col-span-4">
+                    <label for="notes" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">메모</label>
+                    <textarea id="notes" class="w-full px-2 sm:px-4 py-2 text-xs sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150 h-16 sm:h-20"></textarea>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                <button type="submit" class="w-full py-2 sm:py-3 px-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">기록 추가</button>
+                <button type="button" id="clear-all-btn" class="w-full py-2 sm:py-3 px-6 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">전체 기록 삭제</button>
+            </div>
+        </form>
+
+        <!-- 운동 기록 테이블 -->
+        <div class="overflow-x-auto rounded-lg shadow-md">
+            <table class="min-w-full divide-y divide-gray-200 hidden md:table">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-3 sm:px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">날짜</th>
+                        <th class="px-3 sm:px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">조깅(km)</th>
+                        <th class="px-3 sm:px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">조깅(분)</th>
+                        <th class="px-3 sm:px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">푸시업</th>
+                        <th class="px-3 sm:px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">스쿼트</th>
+                        <th class="px-3 sm:px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">플랭크</th>
+                        <th class="px-3 sm:px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">메모</th>
+                        <th class="px-3 sm:px-6 py-3"></th>
+                    </tr>
+                </thead>
+                <tbody id="workout-table-body" class="bg-white divide-y divide-gray-200"></tbody>
+            </table>
+            <!-- 모바일 카드 뷰 -->
+            <div id="workout-card-body" class="md:hidden space-y-3 mt-3"></div>
+            <!-- 빈 기록 메시지 -->
+            <div id="no-records-message" class="text-center py-8 text-gray-500 text-lg hidden">
+                <p>아직 기록이 없습니다.</p>
+                <p>위의 폼을 채워 첫 번째 운동 기록을 남겨보세요!</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 서비스 워커 등록 (PWA 기능)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                const swBlob = new Blob([
+                    `
+                        const CACHE_NAME = 'workout-app-cache-v1';
+                        const urlsToCache = [
+                            '/',
+                            '/index.html',
+                            'https://cdn.tailwindcss.com'
+                        ];
+
+                        self.addEventListener('install', event => {
+                            event.waitUntil(
+                                caches.open(CACHE_NAME)
+                                    .then(cache => cache.addAll(urlsToCache))
+                                    .catch(e => console.error('Service Worker: Failed to cache URLs', e))
+                            );
+                            self.skipWaiting();
+                        });
+
+                        self.addEventListener('activate', event => {
+                            event.waitUntil(self.clients.claim());
+                            console.log('Service Worker: Activated.');
+                        });
+
+                        self.addEventListener('fetch', event => {
+                            event.respondWith(
+                                caches.match(event.request)
+                                    .then(response => {
+                                        return response || fetch(event.request);
+                                    })
+                                    .catch(e => {
+                                        console.error('Service Worker: Fetch failed', e);
+                                        return new Response('<h2>오프라인 상태입니다</h2><p>네트워크 연결을 확인하고 다시 시도하세요.</p>', {
+                                            headers: { 'Content-Type': 'text/html' }
+                                        });
+                                    })
+                            );
+                        });
+                    `
+                ], {type: 'application/javascript'});
+
+                const swUrl = URL.createObjectURL(swBlob);
+                navigator.serviceWorker.register(swUrl)
+                    .then(reg => console.log('Service Worker 등록 성공', reg))
+                    .catch(err => console.log('Service Worker 등록 실패', err));
+            });
+        }
+
+        // 전역 변수 설정
+        const form = document.getElementById('workout-form');
+        const tableBody = document.getElementById('workout-table-body');
+        const cardBody = document.getElementById('workout-card-body');
+        const statsSection = document.getElementById('stats-section');
+        const noRecordsMessage = document.getElementById('no-records-message');
+        const clearAllBtn = document.getElementById('clear-all-btn');
+        let workouts = [];
+
+        // 오늘 날짜 기본값으로 설정
+        document.getElementById('date').valueAsDate = new Date();
+
+        // 로컬 스토리지에서 기록 불러오기
+        const loadWorkouts = () => {
+            try {
+                const stored = localStorage.getItem('workout_tracker_data');
+                workouts = stored ? JSON.parse(stored) : [];
+                renderAll();
+            } catch (e) {
+                console.error('로컬 스토리지 데이터 로드 실패', e);
+                workouts = [];
+                showCustomDialog('이전 기록을 불러오는 중 오류가 발생했습니다. 기록이 초기화됩니다.', null, '확인');
+                renderAll();
+            }
+        };
+
+        // 로컬 스토리지에 기록 저장하기
+        const saveWorkouts = () => {
+            try {
+                localStorage.setItem('workout_tracker_data', JSON.stringify(workouts));
+            } catch (e) {
+                console.error('로컬 스토리지 데이터 저장 실패', e);
+                showCustomDialog('기록을 저장하는 중 오류가 발생했습니다. 브라우저 저장 공간을 확인하세요.', null, '확인');
+            }
+        };
+
+        // 통계 계산 및 렌더링 함수
+        const calculateAndRenderStats = () => {
+            let totalJoggingKm = 0;
+            let totalJoggingTime = 0;
+            let totalPushups = 0;
+            let totalSquats = 0;
+            let totalPlank = 0;
+
+            workouts.forEach(w => {
+                totalJoggingKm += parseFloat(w.jogging_km) || 0;
+                totalJoggingTime += parseInt(w.jogging_time) || 0;
+                totalPushups += parseInt(w.pushups) || 0;
+                totalSquats += parseInt(w.squats) || 0;
+                totalPlank += parseInt(w.plank) || 0;
+            });
+
+            const stats = [
+                { title: '총 운동 횟수', value: workouts.length, unit: '회', icon: `<svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h3m-3 4h3"></path></svg>` },
+                { title: '총 조깅 거리', value: totalJoggingKm.toFixed(1), unit: 'km', icon: `<svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>` },
+                { title: '총 조깅 시간', value: totalJoggingTime, unit: '분', icon: `<svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>` },
+                { title: '총 푸시업', value: totalPushups, unit: '개', icon: `<svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V6L7 12h10l-4 4m0 0l-4 4"></path></svg>` },
+                { title: '총 스쿼트', value: totalSquats, unit: '개', icon: `<svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V6L7 12h10l-4 4m0 0l-4 4"></path></svg>` },
+                { title: '총 플랭크', value: totalPlank, unit: '초', icon: `<svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8m-4-4v4m-4-4v4m0 0a2 2 0 012-2h4a2 2 0 012 2z"></path></svg>` }
+            ];
+
+            statsSection.innerHTML = stats.map(stat => `
+                <div class="bg-gray-50 rounded-xl p-4 flex flex-col items-center justify-center text-center shadow-sm">
+                    ${stat.icon}
+                    <div class="mt-2">
+                        <p class="text-sm text-gray-500">${stat.title}</p>
+                        <p class="text-xl sm:text-2xl font-bold text-gray-800">${stat.value}<span class="text-sm font-normal text-gray-500 ml-1">${stat.unit}</span></p>
+                    </div>
+                </div>
+            `).join('');
+        };
+        
+        // 테이블 및 카드 렌더링 함수
+        const renderTable = () => {
+            tableBody.innerHTML = '';
+            cardBody.innerHTML = '';
+            workouts.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            if (workouts.length === 0) {
+                noRecordsMessage.classList.remove('hidden');
+            } else {
+                noRecordsMessage.classList.add('hidden');
+            }
+
+            workouts.forEach((w, i) => {
+                const km = w.jogging_km ? parseFloat(w.jogging_km).toFixed(1) : '';
+                const notesTruncated = (w.notes && w.notes.length > 30) ? w.notes.substring(0, 27) + '...' : w.notes;
+
+                // 테이블 뷰 (PC)
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50 transition-colors duration-150';
+                row.innerHTML = `
+                    <td class="px-3 sm:px-6 py-4 text-xs sm:text-sm text-gray-500">${w.date}</td>
+                    <td class="px-3 sm:px-6 py-4 text-xs sm:text-sm text-gray-500">${km}</td>
+                    <td class="px-3 sm:px-6 py-4 text-xs sm:text-sm text-gray-500">${w.jogging_time || ''}</td>
+                    <td class="px-3 sm:px-6 py-4 text-xs sm:text-sm text-gray-500">${w.pushups || ''}</td>
+                    <td class="px-3 sm:px-6 py-4 text-xs sm:text-sm text-gray-500">${w.squats || ''}</td>
+                    <td class="px-3 sm:px-6 py-4 text-xs sm:text-sm text-gray-500">${w.plank || ''}</td>
+                    <td class="px-3 sm:px-6 py-4 text-xs sm:text-sm text-gray-500 truncate max-w-[120px]" title="${w.notes || ''}">${notesTruncated || ''}</td>
+                    <td class="px-3 sm:px-6 py-4 text-right">
+                        <button class="delete-btn text-red-600 hover:text-red-800 transition-colors duration-150" data-index="${i}">삭제</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+
+                // 카드 뷰 (모바일)
+                const card = document.createElement('div');
+                card.className = "bg-gray-50 p-4 rounded-lg shadow-sm flex flex-col space-y-1";
+                card.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm font-semibold text-gray-800">${w.date}</span>
+                        <button class="delete-btn text-red-600 text-sm" data-index="${i}">삭제</button>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 text-xs text-gray-600">
+                        <p><strong>조깅:</strong> ${km}km / ${w.jogging_time || ''}분</p>
+                        <p><strong>푸시업:</strong> ${w.pushups || ''}개</p>
+                        <p><strong>스쿼트:</strong> ${w.squats || ''}개</p>
+                        <p><strong>플랭크:</strong> ${w.plank || ''}초</p>
+                    </div>
+                    <div class="mt-2 text-xs text-gray-500">
+                        <p><strong>메모:</strong> ${w.notes || '없음'}</p>
+                    </div>
+                `;
+                cardBody.appendChild(card);
+            });
+
+            // 삭제 버튼 이벤트 리스너 추가
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', e => {
+                    const idx = parseInt(e.target.dataset.index, 10);
+                    showCustomDialog("이 기록을 삭제하시겠습니까?", () => {
+                        workouts.splice(idx, 1);
+                        saveWorkouts();
+                        renderAll();
+                    });
+                });
+            });
+        };
+
+        // 전체 렌더링 함수
+        const renderAll = () => {
+            renderTable();
+            calculateAndRenderStats();
+        };
+
+        // 커스텀 확인 대화상자
+        const showCustomDialog = (msg, onConfirm, confirmText = '확인', cancelText = '취소') => {
+            const exist = document.getElementById('custom-dialog');
+            if (exist) exist.remove();
+            const dialogDiv = document.createElement('div');
+            dialogDiv.id = "custom-dialog";
+            dialogDiv.className = "fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50 p-4";
+            dialogDiv.innerHTML = `
+                <div class="bg-white p-6 rounded-lg shadow-xl w-full max-w-sm">
+                    <p class="text-lg text-gray-800 mb-4">${msg}</p>
+                    <div class="flex justify-end gap-2">
+                        ${onConfirm ? `<button id="cancel-btn" class="px-4 py-2 bg-gray-200 rounded-lg text-gray-800 hover:bg-gray-300 transition">${cancelText}</button>` : ''}
+                        <button id="confirm-btn" class="px-4 py-2 ${onConfirm ? 'bg-red-600 text-white hover:bg-red-700' : 'bg-blue-600 text-white hover:bg-blue-700'} rounded-lg transition">${confirmText}</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(dialogDiv);
+            if (onConfirm) {
+                document.getElementById('cancel-btn').onclick = () => dialogDiv.remove();
+            }
+            document.getElementById('confirm-btn').onclick = () => { 
+                if (onConfirm) onConfirm(); 
+                dialogDiv.remove(); 
+            };
+        };
+
+        // 폼 제출 이벤트 핸들러
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            const newW = {
+                date: document.getElementById('date').value,
+                jogging_km: document.getElementById('jogging-km').value,
+                jogging_time: document.getElementById('jogging-time').value,
+                pushups: document.getElementById('pushups').value,
+                squats: document.getElementById('squats').value,
+                plank: document.getElementById('plank').value,
+                notes: document.getElementById('notes').value
+            };
+            const hasData = Object.entries(newW).some(([k, v]) => k !== 'date' && v !== '');
+            if (!hasData) {
+                showCustomDialog("운동 기록 항목을 하나 이상 입력해주세요.", null, '확인');
+                return;
+            }
+            workouts.push(newW);
+            saveWorkouts();
+            renderAll();
+            form.reset();
+            document.getElementById('date').valueAsDate = new Date();
+        });
+
+        // 전체 기록 삭제 버튼 이벤트 리스너
+        clearAllBtn.addEventListener('click', () => {
+            showCustomDialog("모든 운동 기록을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.", () => {
+                workouts = [];
+                saveWorkouts();
+                renderAll();
+            }, '삭제', '취소');
+        });
+
+        // 페이지 로드 시 기록 불러오기
+        window.onload = loadWorkouts;
+    </script>
+</body>
+</html>
